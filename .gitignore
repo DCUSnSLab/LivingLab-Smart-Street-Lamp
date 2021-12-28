@@ -1,0 +1,11 @@
+# ignore video & image file
+*.mp4
+*.zip
+*.avi
+
+# ignore don't need folder
+DeepSORT_YOLOv5_Pytorch-master
+LivingLab-Smart-Street-Lamp
+Yolov5_DeepSort_Pytorch-master
+MOT16_eval
+
