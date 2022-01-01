@@ -4,6 +4,9 @@
 ```
 NOTICE! This MOT16 evaluation is performed on the train split, NOT the test split, as the test ground truth is not publicly available. However, this is not an issue as the train dataset is actually never used for training.
 
+
+## Obtained metrics:
+
 ```
 
 CLEAR: ch_yolor-p6_deep_sort-pedestrianMOTA      MOTP      MODA      CLR_Re    CLR_Pr    MTR       PTR       MLR       sMOTA     CLR_TP    CLR_FN    CLR_FP    IDSW      MT        PT        ML        Frag
