@@ -8,4 +8,4 @@ class ProcessImpl():
         self.run()
 
     def run(self):
-        print('run target', self.pid, self.name)
+        print('run target')
