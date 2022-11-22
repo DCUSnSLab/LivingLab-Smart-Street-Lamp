@@ -7,7 +7,7 @@ from queue import Queue
 
 class ProcessImpl(metaclass=ABCMeta):
     def __init__(self, name):
-        self.msgQueueList:list[Queue] = list()
+        # self.msgQueueList:list[Queue] = list()
         self.aggQueue:Queue = None
         self.name = name
         self.process = None
@@ -15,7 +15,7 @@ class ProcessImpl(metaclass=ABCMeta):
 
     def addSubscriber(self, toProc, manager):
         tqueue = manager.Queue()
-        self.msgQueueList.append(tqueue)
+        # self.msgQueueList.append(tqueue)
         toProc.__addPublisher(tqueue)
 
     def __addPublisher(self, queue:Queue):
