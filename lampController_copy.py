@@ -19,7 +19,7 @@ class LampSystemManager:
         env_proc = EnvironSensor('environSensor')
         # test_proc = testProc('test1')
         # test2_proc = testProc('test2')
-        # proc_exec = procExec('exec_exam')
+        proc_exec = procExec('exec_exam')
         api_proc = SunAPI('api')
         button_proc = EmergencyButton('button')
 
@@ -31,7 +31,7 @@ class LampSystemManager:
         self.addProcess(env_proc)
         # self.addProcess(test_proc)
         # self.addProcess(test2_proc)
-        # self.addProcess(proc_exec)
+        self.addProcess(proc_exec)
         self.addProcess(api_proc)
         self.addProcess(button_proc)
 
