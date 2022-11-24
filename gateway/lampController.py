@@ -4,6 +4,7 @@ import time
 from importlib import reload
 
 import proc_testProc
+from proc_otacom import otaComm
 from proc_environsensor import EnvironSensor
 from proc_exec import procExec
 from proc_testProc import testProc
@@ -22,6 +23,7 @@ class LampSystemManager(ProcessImpl):
 
     def constructProcess(self):
         # create processes
+        otacom = otaComm()
         pub_proc = testPublisher('testPublisher')
         test_proc = testProc('test1')
         test2_proc = testProc('test2')
@@ -32,6 +34,7 @@ class LampSystemManager(ProcessImpl):
         print(pub_proc.msgQueueList)
 
         # add process
+        self.addProcess(otacom)
         self.addProcess(pub_proc)
         self.addProcess(test_proc)
         self.addProcess(test2_proc)
@@ -39,8 +42,13 @@ class LampSystemManager(ProcessImpl):
     def doProc(self):
         self.__startChildProcess()
 
-        while True:
-            time.sleep(10)
+        loop_f = True
+        while loop_f:
+            try:
+                time.sleep(60)
+            except KeyboardInterrupt:
+                print('?????')
+                loop_f = False
             self._print('checking Process alive')
             self.printProcessStatus()
             self.__startChildProcess()
