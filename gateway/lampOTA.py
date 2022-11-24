@@ -9,7 +9,8 @@ def f(d, l):
     l.append('abc')
 
 if __name__ == '__main__':
-    g= git.cmd.Git()
+    g= git.cmd.Git('/home/soobin/development/LivingLab-Smart-Street-Lamp')
+    g.pull()
     # pid = os.fork()
     # if pid == 0:
     #     print('run child')
