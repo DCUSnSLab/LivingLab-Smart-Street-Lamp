@@ -119,6 +119,7 @@ int main(int argc, char *argv[]) {
 
   const char *bdf_font_file = NULL;
   int xm = 0;
+  int xs = 0;
   int x_orig = 0;
   int y_orig = 0;
   int letter_spacing = 0;
@@ -275,8 +276,12 @@ int main(int argc, char *argv[]) {
                       color, outline_font ? NULL : &bg_color, "이산화탄소",
                       letter_spacing);
 
-    rgb_matrix::DrawText(canvas, font, 19, 29,
+    rgb_matrix::DrawText(canvas, font, 15, 29,
                       color, outline_font ? NULL : &bg_color, CO2,
+                      letter_spacing);
+
+    rgb_matrix::DrawText(canvas, font, 40, 29,
+                      color, outline_font ? NULL : &bg_color, "%",
                       letter_spacing);
 
     sleep(3);
@@ -290,8 +295,12 @@ int main(int argc, char *argv[]) {
                       color, outline_font ? NULL : &bg_color, "습도",
                       letter_spacing);
 
-    rgb_matrix::DrawText(canvas, font, 25, 29,
+    rgb_matrix::DrawText(canvas, font, 20, 29,
                       color, outline_font ? NULL : &bg_color, HUM,
+                      letter_spacing);
+
+    rgb_matrix::DrawText(canvas, font, 36, 29,
+                      color, outline_font ? NULL : &bg_color, "%",
                       letter_spacing);
 
     sleep(3);
@@ -305,8 +314,12 @@ int main(int argc, char *argv[]) {
                       color, outline_font ? NULL : &bg_color, "기온",
                       letter_spacing);
 
-    rgb_matrix::DrawText(canvas, font, 25, 29,
+    rgb_matrix::DrawText(canvas, font, 20, 29,
                       color, outline_font ? NULL : &bg_color, TEMP,
+                      letter_spacing);
+
+    rgb_matrix::DrawText(canvas, font, 36, 29,
+                      color, outline_font ? NULL : &bg_color, "도",
                       letter_spacing);
 
     sleep(3);
@@ -325,21 +338,25 @@ int main(int argc, char *argv[]) {
               color.r = 0;
               color.g = 0;
               color.b = 255;
+              xs = 0;
     }
     else if(FINE_num >= 31 && FINE_num <= 50) {
               color.r = 0;
               color.g = 255;
               color.b = 0;
+              xs = 0;
     }
     else if(FINE_num >= 51 && FINE_num <= 100) {
               color.r = 255;
               color.g = 255;
               color.b = 0;
+              xs = 0;
     }
     else if(FINE_num >= 101) {
               color.r = 255;
               color.g = 0;
               color.b = 0;
+              xs = 0;
     }
 
     if(FINE_num >= 0 && FINE_num <= 9) {
@@ -354,6 +371,38 @@ int main(int argc, char *argv[]) {
     rgb_matrix::DrawText(canvas, font, xm, 29,
                       color, outline_font ? NULL : &bg_color, FINE,
                       letter_spacing);
+
+    sleep(3);
+    canvas->Clear();
+
+    rgb_matrix::DrawText(canvas, font, 7, 14,
+                      color, outline_font ? NULL : &bg_color, "미세먼지",
+                      letter_spacing);
+
+    if(FINE_num >= 0 && FINE_num <= 30) {
+              xs = 0;
+              rgb_matrix::DrawText(canvas, font, xs, 29,
+                      color, outline_font ? NULL : &bg_color, "좋음",
+                      letter_spacing);
+    }
+    else if(FINE_num >= 31 && FINE_num <= 50) {
+              xs = 0;
+              rgb_matrix::DrawText(canvas, font, xs, 29,
+                      color, outline_font ? NULL : &bg_color, "보통",
+                      letter_spacing);
+    }
+    else if(FINE_num >= 51 && FINE_num <= 100) {
+              xs = 0;
+              rgb_matrix::DrawText(canvas, font, xs, 29,
+                      color, outline_font ? NULL : &bg_color, "나쁨",
+                      letter_spacing);
+    }
+    else if(FINE_num >= 101) {
+              xs = 0;
+              rgb_matrix::DrawText(canvas, font, xs, 29,
+                      color, outline_font ? NULL : &bg_color, "매우 나쁨",
+                      letter_spacing);
+    }
 
     sleep(3);
     canvas->Clear();
