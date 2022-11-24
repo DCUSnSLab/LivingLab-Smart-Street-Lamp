@@ -1,13 +1,14 @@
 import multiprocessing as mp
 import multiprocessing.context
 import multiprocessing.managers
+import os
 from abc import *
 from queue import Queue
 
 
 class ProcessImpl(metaclass=ABCMeta):
     def __init__(self, name):
-        self.msgQueueList:list[Queue] = list()
+        self.msgQueueList:dict[str, Queue] = dict()
         self.aggQueue:Queue = None
         self.name = name
         self.process = None
@@ -15,22 +16,28 @@ class ProcessImpl(metaclass=ABCMeta):
 
     def addSubscriber(self, toProc, manager):
         tqueue = manager.Queue()
-        self.msgQueueList.append(tqueue)
-        toProc.__addPublisher(tqueue)
+        self.msgQueueList[toProc.name] = tqueue
+        toProc.__addPublisher(self, tqueue)
 
-    def __addPublisher(self, queue:Queue):
+    def __addPublisher(self, fromProc, queue:Queue):
         self.aggQueue = queue
 
     def start(self, proc:multiprocessing.context.Process):
         self.process = proc
         self.process.start()
-        self._print('start Process')
+        self._print('Process started')
 
     def is_alive(self):
-        return self.process.is_alive()
+        if self.process is None:
+            return False
+        else:
+            return self.process.is_alive()
 
     def getPID(self):
-        return self.process.pid
+        if self.process is None:
+            return os.getpid()
+        else:
+            return self.process.pid
 
     def join(self):
         self.process.join()
@@ -49,12 +56,17 @@ class ProcessImpl(metaclass=ABCMeta):
         #     time.sleep(1)
         #     a+=1
 
-    @abstractmethod
-    def doProc(self):
-        pass
-
     def __done(self):
         self._print('Finished Process')
 
     def _print(self, data):
         print('[%d-%s] - %s'%(self.getPID(), self.name, data))
+
+    def _SendtoAll(self, data):
+        for q in self.msgQueueList.values():
+            q.put(data)
+
+    @abstractmethod
+    def doProc(self):
+        pass
+

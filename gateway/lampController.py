@@ -1,54 +1,94 @@
 import multiprocessing as mp
+import sys
 import time
+from importlib import reload
 
-from gateway.proc_environsensor import EnvironSensor
-from gateway.proc_exec import procExec
-from gateway.proc_testProc import testProc
+import proc_testProc
+from proc_environsensor import EnvironSensor
+from proc_exec import procExec
+from proc_testProc import testProc
+from proc_testPub import testPublisher
 from procImpl import ProcessImpl
 
 
-class LampSystemManager:
+class LampSystemManager(ProcessImpl):
     def __init__(self, manager):
+        super().__init__('LampManager')
         self.dataManager = manager
         self.processItems:dict[str, ProcessImpl] = dict()
         #print(type(self.dataManager))
 
-        #create processes
-        env_proc = EnvironSensor('environSensor')
+        self.constructProcess()
+
+    def constructProcess(self):
+        # create processes
+        pub_proc = testPublisher('testPublisher')
         test_proc = testProc('test1')
         test2_proc = testProc('test2')
-        proc_exec = procExec('exec_exam')
 
-        #process aggregation
-        env_proc.addSubscriber(test_proc, self.dataManager)
-        env_proc.addSubscriber(test2_proc, self.dataManager)
+        # process aggregation
+        pub_proc.addSubscriber(test_proc, self.dataManager)
+        pub_proc.addSubscriber(test2_proc, self.dataManager)
+        print(pub_proc.msgQueueList)
 
-        #add process
-        self.addProcess(env_proc)
+        # add process
+        self.addProcess(pub_proc)
         self.addProcess(test_proc)
         self.addProcess(test2_proc)
-        self.addProcess(proc_exec)
 
-    def run(self):
-        #process start
+    def doProc(self):
+        self.__startChildProcess()
+
+        while True:
+            time.sleep(10)
+            self._print('checking Process alive')
+            self.printProcessStatus()
+            self.__startChildProcess()
+            self._print('Process checking finished')
+
+        # for p in self.processItems.values():
+        #     #print('wait [%d]'%p.getPID())
+        #     p.join()
+        #     rcnt -= 1
+        #     print('[%d-%s] - Finished' % (p.getPID(),p.name))
+        #     print('Process remaining [%d]'%rcnt)
+
+    def __startChildProcess(self):
+        # process start
+        self._print('Starting Child Processes')
         for val in self.processItems.values():
-            p = mp.Process(target=val.run, name=val.name)
-            val.start(p)
+            if val.is_alive() is False:
+                p = mp.Process(target=val.run, name=val.name)
+                val.start(p)
 
-        rcnt = len(self.processItems.keys())
-        print('Process remaining [%d]'%rcnt)
+    def __restartAllChildProcesses(self):
+        #delete all process list
+        self.terminateAllProcess()
+        time.sleep(1)
+        self.__startChildProcess()
 
-        for p in self.processItems.values():
-            #print('wait [%d]'%p.getPID())
-            p.join()
-            rcnt -= 1
-            print('[%d-%s] - Finished' % (p.getPID(),p.name))
-            print('Process remaining [%d]'%rcnt)
+    def terminateProcessByName(self, name):
+        if name in self.processItems:
+            sp = self.processItems[name]
+            sp.terminate()
+            self._print('%15s(%5d) has been terminated'%(name, sp.getPID()))
+        else:
+            self._print('there is no Process by [%s]'%name)
 
+    def terminateAllProcess(self):
+        for val in self.processItems.values():
+            val.terminate()
+            self._print('%15s(%5d) has been terminated' % (val.name, val.getPID()))
+
+    def printProcessStatus(self):
+        for key, val in self.processItems.items():
+            self._print("[key : %15s] [pid : %5d] [status : %5s]"%(key, val.getPID(), val.is_alive()))
 
     def addProcess(self, proc:ProcessImpl):
         self.processItems[proc.name] = proc
 
+    def getProcess(self):
+        return self.processItems
 
 if __name__ == '__main__':
     lc = LampSystemManager(mp.Manager())
