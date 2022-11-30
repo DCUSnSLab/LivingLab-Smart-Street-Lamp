@@ -1,63 +1,110 @@
 import multiprocessing as mp
+import sys
 import time
+from importlib import reload
 
-from gateway.proc_environsensor import EnvironSensor
-from gateway.proc_exec import procExec
-from gateway.proc_testProc import testProc
-from gateway.procImpl import ProcessImpl
-from gateway.proc_websocket import webSocket
-from gateway.proc_test1 import test_socket
-from gateway.proc_test2 import test_socket2
+import proc_testProc
+from proc_otacom import otaComm
+from proc_environsensor import EnvironSensor
+from proc_exec import procExec
+from proc_testProc import testProc
+from proc_testPub import testPublisher
+from procImpl import ProcessImpl
 
-class LampSystemManager:
-    def __init__(self, manager):
+
+class LampSystemManager(ProcessImpl):
+    def __init__(self, manager, isDebug=False):
+        super().__init__('LampManager')
+        self.DebugMode = isDebug
         self.dataManager = manager
         self.processItems:dict[str, ProcessImpl] = dict()
         #print(type(self.dataManager))
 
-        #create processes
-        env_proc = EnvironSensor('environSensor')
-        test_proc = testProc('test1')
-        test2_proc = testProc('test2')
-        proc_exec = procExec('exec_exam')
-        socket_proc = webSocket('socket')
-        sk_test_proc1 = test_socket('so1')
-        sk_test_proc2 = test_socket2('so2')
+        self.constructProcess()
 
-        #process aggregation
-        env_proc.addSubscriber(test_proc, self.dataManager)
-        env_proc.addSubscriber(test2_proc, self.dataManager)
+    def constructProcess(self):
+        # create processes
+        otacom = otaComm()
 
-        #add process
-        self.addProcess(env_proc)
-        self.addProcess(test_proc)
-        self.addProcess(test2_proc)
-        self.addProcess(proc_exec)
-        self.addProcess(socket_proc)
-        self.addProcess(sk_test_proc1)
-        self.addProcess(sk_test_proc2)
+        if self.DebugMode is True:
+            self._print('Debug Mode has been started..')
+            # create processes
+            pub_proc = testPublisher('testPublisher')
+            test_proc = testProc('test1')
+            test2_proc = testProc('test2')
 
-    def run(self):
-        #process start
+            # process aggregation
+            pub_proc.addSubscriber(test_proc, self.dataManager)
+            pub_proc.addSubscriber(test2_proc, self.dataManager)
+            print(pub_proc.msgQueueList)
+
+            # add process
+            self.addProcess(otacom)
+            self.addProcess(pub_proc)
+            self.addProcess(test_proc)
+            self.addProcess(test2_proc)
+        else:
+            pass
+
+    def doProc(self):
+        self.__startChildProcess()
+
+        loop_f = True
+        while loop_f:
+            try:
+                time.sleep(60)
+            except KeyboardInterrupt:
+                print('?????')
+                loop_f = False
+            self._print('checking Process alive')
+            self.printProcessStatus()
+            self.__startChildProcess()
+            self._print('Process checking finished')
+
+        # for p in self.processItems.values():
+        #     #print('wait [%d]'%p.getPID())
+        #     p.join()
+        #     rcnt -= 1
+        #     print('[%d-%s] - Finished' % (p.getPID(),p.name))
+        #     print('Process remaining [%d]'%rcnt)
+
+    def __startChildProcess(self):
+        # process start
+        self._print('Starting Child Processes')
         for val in self.processItems.values():
-            p = mp.Process(target=val.run, name=val.name)
-            val.start(p)
+            if val.is_alive() is False:
+                p = mp.Process(target=val.run, name=val.name)
+                val.start(p)
 
-        rcnt = len(self.processItems.keys())
-        print('Process remaining [%d]'%rcnt)
+    def __restartAllChildProcesses(self):
+        #delete all process list
+        self.terminateAllProcess()
+        time.sleep(1)
+        self.__startChildProcess()
 
-        for p in self.processItems.values():
-            #print('wait [%d]'%p.getPID())
-            p.join()
-            rcnt -= 1
-            print('[%d-%s] - Finished' % (p.getPID(),p.name))
-            print('Process remaining [%d]'%rcnt)
+    def terminateProcessByName(self, name):
+        if name in self.processItems:
+            sp = self.processItems[name]
+            sp.terminate()
+            self._print('%15s(%5d) has been terminated'%(name, sp.getPID()))
+        else:
+            self._print('there is no Process by [%s]'%name)
 
+    def terminateAllProcess(self):
+        for val in self.processItems.values():
+            val.terminate()
+            self._print('%15s(%5d) has been terminated' % (val.name, val.getPID()))
+
+    def printProcessStatus(self):
+        for key, val in self.processItems.items():
+            self._print("[key : %15s] [pid : %5d] [status : %5s]"%(key, val.getPID(), val.is_alive()))
 
     def addProcess(self, proc:ProcessImpl):
         self.processItems[proc.name] = proc
 
+    def getProcess(self):
+        return self.processItems
 
 if __name__ == '__main__':
-    lc = LampSystemManager(mp.Manager())
+    lc = LampSystemManager(mp.Manager(), isDebug=True)
     lc.run()
