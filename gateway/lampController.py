@@ -25,6 +25,7 @@ class LampSystemManager(ProcessImpl):
     def constructProcess(self):
         # create processes
         otacom = otaComm()
+        self.addProcess(otacom)
 
         if self.DebugMode is True:
             self._print('Debug Mode has been started..')
@@ -39,7 +40,7 @@ class LampSystemManager(ProcessImpl):
             print(pub_proc.msgQueueList)
 
             # add process
-            self.addProcess(otacom)
+
             self.addProcess(pub_proc)
             self.addProcess(test_proc)
             self.addProcess(test2_proc)

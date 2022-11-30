@@ -23,7 +23,7 @@ def startGitPull():
     pid = os.fork()
     if pid == 0:
         print('Git Pulling from server')
-        os.system('sh gitpull.sh')
+        os.system('sh ./gateway/ota/gitpull.sh')
     print('wait gitpull')
     os.waitpid(pid, 0)
 
@@ -59,12 +59,13 @@ if __name__ == '__main__':
             print('wait for OTA reqeust...')
             message, mtype = mq.receive()
             print("*** New message received ***")
-            print(f"Raw message: {message}")
+            print(f"Raw message: {message}", mtype)
             if mtype == TYPE_STRING:
                 str_message = message.decode()
+                print('1111', str_message)
                 if str_message == "s":
                     killLamp(pid)
-                    startGitPull()
+                    #startGitPull()
                     pid = startLamp()
 
     except sysv_ipc.ExistentialError:
