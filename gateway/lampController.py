@@ -13,8 +13,9 @@ from procImpl import ProcessImpl
 
 
 class LampSystemManager(ProcessImpl):
-    def __init__(self, manager):
+    def __init__(self, manager, isDebug=False):
         super().__init__('LampManager')
+        self.DebugMode = isDebug
         self.dataManager = manager
         self.processItems:dict[str, ProcessImpl] = dict()
         #print(type(self.dataManager))
@@ -24,20 +25,26 @@ class LampSystemManager(ProcessImpl):
     def constructProcess(self):
         # create processes
         otacom = otaComm()
-        pub_proc = testPublisher('testPublisher')
-        test_proc = testProc('test1')
-        test2_proc = testProc('test2')
 
-        # process aggregation
-        pub_proc.addSubscriber(test_proc, self.dataManager)
-        pub_proc.addSubscriber(test2_proc, self.dataManager)
-        print(pub_proc.msgQueueList)
+        if self.DebugMode is True:
+            self._print('Debug Mode has been started..')
+            # create processes
+            pub_proc = testPublisher('testPublisher')
+            test_proc = testProc('test1')
+            test2_proc = testProc('test2')
 
-        # add process
-        self.addProcess(otacom)
-        self.addProcess(pub_proc)
-        self.addProcess(test_proc)
-        self.addProcess(test2_proc)
+            # process aggregation
+            pub_proc.addSubscriber(test_proc, self.dataManager)
+            pub_proc.addSubscriber(test2_proc, self.dataManager)
+            print(pub_proc.msgQueueList)
+
+            # add process
+            self.addProcess(otacom)
+            self.addProcess(pub_proc)
+            self.addProcess(test_proc)
+            self.addProcess(test2_proc)
+        else:
+            pass
 
     def doProc(self):
         self.__startChildProcess()
@@ -99,5 +106,5 @@ class LampSystemManager(ProcessImpl):
         return self.processItems
 
 if __name__ == '__main__':
-    lc = LampSystemManager(mp.Manager())
+    lc = LampSystemManager(mp.Manager(), isDebug=True)
     lc.run()

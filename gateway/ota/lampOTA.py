@@ -38,13 +38,18 @@ def killLamp(pid):
     os.kill(pid, signal.SIGKILL)
     proc.wait(timeout=5)
     print('all process killed')
-    time.sleep(2)
+    time.sleep(1)
+
+def sighandle(signum, frame):
+    print('signal execute!!!!!')
+    exit()
 
 if __name__ == '__main__':
     BUFF_SIZE = 16
     SIZEOF_FLOAT = 8
     pid = 0
     try:
+        signal.signal(signal.SIGINT, sighandle)
         pid = startLamp()
         print('start child node ',pid)
         time.sleep(2)
