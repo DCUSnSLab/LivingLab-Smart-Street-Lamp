@@ -4,8 +4,10 @@ import time
 from gateway.proc_environsensor import EnvironSensor
 from gateway.proc_exec import procExec
 from gateway.proc_testProc import testProc
-from procImpl import ProcessImpl
-
+from gateway.procImpl import ProcessImpl
+from gateway.proc_websocket import webSocket
+from gateway.proc_test1 import test_socket
+from gateway.proc_test2 import test_socket2
 
 class LampSystemManager:
     def __init__(self, manager):
@@ -18,6 +20,9 @@ class LampSystemManager:
         test_proc = testProc('test1')
         test2_proc = testProc('test2')
         proc_exec = procExec('exec_exam')
+        socket_proc = webSocket('socket')
+        sk_test_proc1 = test_socket('so1')
+        sk_test_proc2 = test_socket2('so2')
 
         #process aggregation
         env_proc.addSubscriber(test_proc, self.dataManager)
@@ -28,6 +33,9 @@ class LampSystemManager:
         self.addProcess(test_proc)
         self.addProcess(test2_proc)
         self.addProcess(proc_exec)
+        self.addProcess(socket_proc)
+        self.addProcess(sk_test_proc1)
+        self.addProcess(sk_test_proc2)
 
     def run(self):
         #process start
