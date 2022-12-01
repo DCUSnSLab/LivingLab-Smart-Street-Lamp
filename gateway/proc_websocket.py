@@ -10,7 +10,7 @@ import struct
 BUFF_SIZE = 16
 
 from gateway.procImpl import ProcessImpl
-from type_definitions import *
+from ota.type_definitions import *
 
 class webSocket(ProcessImpl):
     def __init__(self, name):

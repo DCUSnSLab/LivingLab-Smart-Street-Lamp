@@ -10,6 +10,9 @@ from proc_exec import procExec
 from proc_testProc import testProc
 from proc_testPub import testPublisher
 from procImpl import ProcessImpl
+from proc_api import SunAPI
+from proc_emergency import EmergencyButton
+from proc_ledmatrix import matrix
 
 
 class LampSystemManager(ProcessImpl):
@@ -33,6 +36,10 @@ class LampSystemManager(ProcessImpl):
             pub_proc = testPublisher('testPublisher')
             test_proc = testProc('test1')
             test2_proc = testProc('test2')
+            sensor_proc = EnvironSensor('sensor')
+            api_proc = SunAPI('api')
+            emergency_proc = EmergencyButton('emergency')
+            matrix_proc = matrix('led')
 
             # process aggregation
             pub_proc.addSubscriber(test_proc, self.dataManager)
@@ -44,8 +51,20 @@ class LampSystemManager(ProcessImpl):
             self.addProcess(pub_proc)
             self.addProcess(test_proc)
             self.addProcess(test2_proc)
+            self.addProcess(sensor_proc)
+            self.addProcess(api_proc)
+            self.addProcess(emergency_proc)
+            self.addProcess(matrix_proc)
         else:
-            pass
+            sensor_proc = EnvironSensor('sensor')
+            api_proc = SunAPI('api')
+            emergency_proc = EmergencyButton('emergency')
+            matrix_proc = matrix('led')
+
+            self.addProcess(sensor_proc)
+            self.addProcess(api_proc)
+            self.addProcess(emergency_proc)
+            self.addProcess(matrix_proc)
 
     def doProc(self):
         self.__startChildProcess()
@@ -107,5 +126,5 @@ class LampSystemManager(ProcessImpl):
         return self.processItems
 
 if __name__ == '__main__':
-    lc = LampSystemManager(mp.Manager(), isDebug=True)
+    lc = LampSystemManager(mp.Manager(), isDebug=False)
     lc.run()

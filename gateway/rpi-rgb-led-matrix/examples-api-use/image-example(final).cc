@@ -1,6 +1,5 @@
 #include "led-matrix.h"
 #include "graphics.h"
-#include "type_definitions.h"
 
 #include <getopt.h>
 #include <math.h>
@@ -11,15 +10,10 @@
 #include <string.h>
 #include <time.h>
 
-#include <sys/types.h>
-#include <sys/ipc.h>
-#include <sys/msg.h>
 
 #include <exception>
 #include <Magick++.h>
 #include <magick/image.h>
-
-#define BUFF_SIZE 24
 
 using namespace rgb_matrix;
 using rgb_matrix::Canvas;
