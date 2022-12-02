@@ -1,3 +1,3 @@
 #!/bin/bash
-git checkout liv-373-system
+git checkout lp-79-merge
 git pull origin
