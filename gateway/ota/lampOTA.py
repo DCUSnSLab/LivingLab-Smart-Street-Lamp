@@ -5,9 +5,9 @@ import time
 import psutil
 
 from type_definitions import *
-import sysv_ipc
 import numpy as np
 import struct
+import sysv_ipc
 
 def startLamp():
     pid = os.fork()
@@ -34,8 +34,11 @@ def killLamp(pid):
     children = proc.children(recursive=True)
     children.append(proc)
     for p in children:
-        p.kill()
-    os.kill(pid, signal.SIGKILL)
+        print(p)
+        #p.kill()
+        os.system("kill -9 "+str(p.pid))
+    #os.kill(pid, signal.SIGKILL)
+    os.system("kill -9 "+str(pid))
     proc.wait(timeout=5)
     print('all process killed')
     time.sleep(1)
