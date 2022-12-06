@@ -68,7 +68,7 @@ if __name__ == '__main__':
                 print('1111', str_message)
                 if str_message == "s":
                     killLamp(pid)
-                    #startGitPull()
+                    startGitPull()
                     pid = startLamp()
 
     except sysv_ipc.ExistentialError:
