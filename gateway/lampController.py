@@ -76,7 +76,7 @@ class LampSystemManager(ProcessImpl):
             except KeyboardInterrupt:
                 print('?????')
                 loop_f = False
-            self._print('checking Process alive')
+            self._print('checking Process alive test')
             self.printProcessStatus()
             self.__startChildProcess()
             self._print('Process checking finished')
