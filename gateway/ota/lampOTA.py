@@ -36,9 +36,9 @@ def killLamp(pid):
     for p in children:
         print(p)
         #p.kill()
-        os.system("kill -SIGKILL "+str(p.pid))
-    #os.kill(pid, signal.SIGKILL)
-    os.system("kill -9 "+str(pid))
+        os.system("kill -9 "+str(p.pid))
+    os.kill(pid, signal.SIGKILL)
+    # os.system("sudo kill -9 "+str(pid))
     proc.wait(timeout=5)
     print('all process killed')
     time.sleep(1)
