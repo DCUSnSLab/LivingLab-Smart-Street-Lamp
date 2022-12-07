@@ -10,7 +10,7 @@ if __name__ == '__main__':
     pid = os.fork()
     if pid == 0:
         print('run child')
-        os.execl('test', 'test', *sys.argv)
+        os.execl('test1', 'test1', *sys.argv)
     print('wait child - ',pid)
-    os.wait()
-    print('test ok')
+    pd = os.wait()
+    print('test ok',pd)
