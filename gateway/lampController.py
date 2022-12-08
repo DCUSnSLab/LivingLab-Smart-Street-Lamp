@@ -17,7 +17,7 @@ from proc_ledmatrix import matrix
 
 class LampSystemManager(ProcessImpl):
     def __init__(self, manager, isDebug=False):
-        super().__init__('LampManager_')
+        super().__init__('LampManager')
         self.DebugMode = isDebug
         self.dataManager = manager
         self.processItems:dict[str, ProcessImpl] = dict()
