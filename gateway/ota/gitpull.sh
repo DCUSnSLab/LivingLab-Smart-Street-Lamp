@@ -1,3 +1,3 @@
 #!/bin/bash
-git checkout lp-79_merge
+git checkout main
 git pull origin
