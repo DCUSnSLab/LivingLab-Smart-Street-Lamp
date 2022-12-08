@@ -31,8 +31,8 @@ class SunAPI(ProcessImpl):
                 tree = tree.findall('body/items/item')
                 for item in tree:
                     for i in item:
-                        if i.tag in list:
-                            print(i.tag, i.text)
+                        # if i.tag in list:
+                            # print(i.tag, i.text)
                         if(i.tag == 'nautm'):
                             # print(i.tag, i.text)
                             sunrise = i.text
@@ -41,10 +41,10 @@ class SunAPI(ProcessImpl):
                 
                 timenow = x.strftime("%H%M")
                 if timenow >= sunset or timenow <= sunrise:
-                    print("on")
+                    # print("on")
                     GPIO.output(led, GPIO.HIGH)
                 else:
-                    print("off")
+                    # print("off")
                     GPIO.output(led, GPIO.LOW)
                 time.sleep(5)
         except KeyboardInterrupt:
