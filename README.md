@@ -2,6 +2,7 @@
 Smart Street Lamp
 
 라즈베리파이에서 실행방법
+
 requirments.txt 를 통해 라이브러리 설치 후
 
     sudo sh startLamp.sh
