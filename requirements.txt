@@ -1,0 +1,8 @@
+numpy
+websockets
+sysv-ipc
+psutil
+asyncio
+RPi.GPIO
+multiprocess
+elementpath
