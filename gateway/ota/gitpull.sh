@@ -1,3 +1,3 @@
 #!/bin/bash
-git checkout main
+git checkout master
 git pull origin
