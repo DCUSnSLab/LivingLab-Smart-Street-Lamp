@@ -1,6 +1,8 @@
 # LivingLab-Smart-Street-Lamp
 Smart Street Lamp
 
+*****
+
 실행방법
 
     sudo sh startLamp.sh
@@ -9,4 +11,4 @@ Smart Street Lamp
 
 *****
 
-웹소켓을 통헤 
+코드 수정 사항이 생기면 웹소켓을 통해 OTA 종료 후 git clone 받고 재실행
