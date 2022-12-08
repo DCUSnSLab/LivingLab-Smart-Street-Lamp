@@ -235,10 +235,10 @@ int main(int argc, char *argv[]) {
       exit(1);
     }
 
-    printf("*** New message received ***\nRaw data: ");
+    //printf("*** New message received ***\nRaw data: ");
     for(int i = 0; i < BUFF_SIZE; i++)
-      printf("%02X ", data.data_buff[i]);
-    printf("\n");
+      //printf("%02X ", data.data_buff[i]);
+    //printf("\n");
 
     if(data.data_type == TYPE_STRING)
       printf("Interpreted as string: %15s\n", data.data_buff);
@@ -246,24 +246,24 @@ int main(int argc, char *argv[]) {
     else if(data.data_type == TYPE_TWODOUBLES) {
       memcpy(&dValue1, data.data_buff, sizeof(double));
       memcpy(&dValue2, data.data_buff + sizeof(double), sizeof(double));
-      printf("Interpreted as two doubles: %f, %f\n", dValue1, dValue2);
+      //printf("Interpreted as two doubles: %f, %f\n", dValue1, dValue2);
     }
 
     else if(data.data_type == TYPE_ARRAY) {
       memcpy(new_array, data.data_buff, BUFF_SIZE);
-      printf("Interpreted as array: ");
-      for(int i = 0; i < BUFF_SIZE; i++)
-        printf("%d ", new_array[i]);
-      printf("\n");
+      //printf("Interpreted as array: ");
+      // for(int i = 0; i < BUFF_SIZE; i++)
+      //   printf("%d ", new_array[i]);
+      // printf("\n");
     }
 
     else if(data.data_type == TYPE_DOUBLEANDARRAY) {
       memcpy(&dValue1, data.data_buff, sizeof(double));
       memcpy(&dValue2, data.data_buff + sizeof(double), BUFF_SIZE / 2);
-      printf("Interpreted as one double and array: %f, ", dValue1);
-      for(int i = 0; i < BUFF_SIZE / 2; i++)
-        printf("%d ", new_array[i]);
-      printf("\n");
+      // printf("Interpreted as one double and array: %f, ", dValue1);
+      // for(int i = 0; i < BUFF_SIZE / 2; i++)
+      //   printf("%d ", new_array[i]);
+      // printf("\n");
     }
 
     /* print on Matrix */ 
@@ -510,7 +510,7 @@ int main(int argc, char *argv[]) {
     int hour = t->tm_hour;
     int min = t->tm_min;
 
-    printf("hour : %d / min : %d\n", hour, min);
+    //printf("hour : %d / min : %d\n", hour, min);
 
     int hour10 = (int) hour / 10;
     int hour1 = hour % 10;

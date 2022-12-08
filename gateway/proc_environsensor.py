@@ -47,9 +47,9 @@ class EnvironSensor(ProcessImpl):
                 try:
                     mq = sysv_ipc.MessageQueue(1234, sysv_ipc.IPC_CREAT, 0o666)
                     # numpy array transmission
-                    print("tranmission")
+                    # print("tranmission")
                     mq.send(msg_npy.tobytes(order='C'), True, type=TYPE_NUMPY)
-                    print(f"numpy array sent: {msg_npy}")
+                    # print(f"numpy array sent: {msg_npy}")
                 except sysv_ipc.ExistentialError:
                     print("ERROR: message queue creation failed")
                 time.sleep(10)
