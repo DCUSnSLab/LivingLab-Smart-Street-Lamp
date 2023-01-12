@@ -4,6 +4,9 @@ import fcntl
 import sysv_ipc
 import numpy as np
 import struct
+import paho.mqtt.client as mqtt
+import json
+import datetime as dt
 
 from gateway.procImpl import ProcessImpl
 from ota.type_definitions import *
@@ -15,6 +18,10 @@ class EnvironSensor(ProcessImpl):
     def map_(self,x,input_min,input_max,output_min,output_max):
         a = (x-input_min)*(output_max-output_min)/(input_max-input_min)+output_min
         return a
+
+    def on_disconnect(client, userdata, rc):
+        print("Disconnected:", rc, userdata)
+        print("Disconnected: " + mqtt.error_string(rc))
 
     def doProc(self):
         I2C_SLAVE = 0x703
@@ -43,6 +50,30 @@ class EnvironSensor(ProcessImpl):
                 ultra = 256*int(data[13])+int(data[14])
                 res = [co2_3, co2_4, humd, temp, fine, ultra]
                 msg_npy = np.array(res)
+                
+                x = dt.datetime.now()
+
+                json_object = {
+                    "sh_id": "S001",
+                    "lamp_id": "L001",
+                    "datetime": x.strftime("%Y%m%d%H%M%S"),
+                    "temp": temp,
+                    "hum": humd,
+                    "illum": "400",
+                    # "info": {
+                    #     "event": "4",
+                    # },
+                }
+                json_string = json.dumps(json_object)
+
+                client = mqtt.Client("env/S001/L001")  # puclisher 이름
+                client.username_pw_set("dgo2o", "dgo2o!@")
+                client.connect_async("118.67.128.157", 1883)
+                # print("*****")
+                # print(client.on_connect)
+                # client.on_disconnect=self.on_disconnect
+                # print("*****")
+                client.publish("env/S001/L001", json_string)  # topic, message
 
                 try:
                     mq = sysv_ipc.MessageQueue(1234, sysv_ipc.IPC_CREAT, 0o666)

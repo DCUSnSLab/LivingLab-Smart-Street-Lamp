@@ -6,3 +6,4 @@ asyncio
 RPi.GPIO
 multiprocess
 elementpath
+paho-mqtt
