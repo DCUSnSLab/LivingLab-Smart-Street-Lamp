@@ -66,14 +66,12 @@ class EnvironSensor(ProcessImpl):
                 }
                 json_string = json.dumps(json_object)
 
-                client = mqtt.Client("env/S001/L001")  # puclisher 이름
-                client.username_pw_set("dgo2o", "dgo2o!@")
-                client.connect_async("118.67.128.157", 1883)
-                # print("*****")
-                # print(client.on_connect)
-                # client.on_disconnect=self.on_disconnect
-                # print("*****")
+                client = mqtt.Client("env/S001/L001")
+                # client.username_pw_set("dgo2o", "dgo2o!@")
+                client.connect("118.67.128.157", 1883)
                 client.publish("env/S001/L001", json_string)  # topic, message
+                print("published")
+                client.loop(2)
 
                 try:
                     mq = sysv_ipc.MessageQueue(1234, sysv_ipc.IPC_CREAT, 0o666)
