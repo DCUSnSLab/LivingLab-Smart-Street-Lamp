@@ -7,7 +7,8 @@ requirments.txt 를 통해 라이브러리 설치 후
     sudo sh startLamp.sh
 
 터미널에서 입력하면 OTA 실행되며 lampController를 통해 미세먼지 복합 공기질 센서, 일몰 일출 시각 API, 비상버튼, LED matrix 프로세스 실행
-gateway/ota/type_definitions.py의 SH_ID와 LAMP_ID 
+
+gateway/ota/type_definitions.py의 SH_ID와 LAMP_ID 설정 필요
 
 -----
 
