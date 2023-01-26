@@ -62,8 +62,8 @@ class EnvironSensor(ProcessImpl):
                 x = dt.datetime.now()
 
                 json_object = {
-                    "sh_id": "S001",
-                    "lamp_id": "L001",
+                    "sh_id": SH_ID,
+                    "lamp_id": LAMP_ID,
                     "datetime": x.strftime("%Y%m%d%H%M%S"),
                     "temp": temp,
                     "hum": humd,
@@ -74,10 +74,10 @@ class EnvironSensor(ProcessImpl):
                 }
                 json_string = json.dumps(json_object)
 
-                client = mqtt.Client("env/S001/L001")
+                client = mqtt.Client("env/"+SH_ID+"/"+LAMP_ID)
                 # client.username_pw_set("dgo2o", "dgo2o!@")
                 client.connect("118.67.128.157", 1883)
-                client.publish("env/S001/L001", json_string)  # topic, message
+                client.publish("env/"+SH_ID+"/"+LAMP_ID, json_string)  # topic, message
                 print("published")
                 client.on_connect = self.on_connect_
                 client.on_message = self.on_message_
