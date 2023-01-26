@@ -19,9 +19,17 @@ class EnvironSensor(ProcessImpl):
         a = (x-input_min)*(output_max-output_min)/(input_max-input_min)+output_min
         return a
 
-    def on_disconnect(client, userdata, rc):
-        print("Disconnected:", rc, userdata)
-        print("Disconnected: " + mqtt.error_string(rc))
+    #MQTT 클라이언트가 MQTT 서버에 정상 접속된 후 CONNACK 응답을 받음.
+    def on_connect_(self, client, userdata, flags, rc):
+        print("Connected with result code "+str(rc))
+        # Subscribing in on_connect() means that if we lose the connection and
+        # reconnect then subscriptions will be renewed.
+        #client.subscribe("$SYS/#")
+        client.subscribe("mqtt/myiot/#")
+
+    # The callback for when a PUBLISH message is received from the server.
+    def on_message_(self, client, userdata, msg):
+        print(msg.topic+" "+str(msg.payload))
 
     def doProc(self):
         I2C_SLAVE = 0x703
@@ -71,6 +79,8 @@ class EnvironSensor(ProcessImpl):
                 client.connect("118.67.128.157", 1883)
                 client.publish("env/S001/L001", json_string)  # topic, message
                 print("published")
+                client.on_connect = self.on_connect_
+                client.on_message = self.on_message_
                 client.loop(2)
 
                 try:
