@@ -25,9 +25,9 @@ class EnvironSensor(ProcessImpl):
         # Subscribing in on_connect() means that if we lose the connection and
         # reconnect then subscriptions will be renewed.
         #client.subscribe("$SYS/#")
-        client.subscribe("mqtt/myiot/#")
+        # client.subscribe("mqtt/myiot/#")
 
-    # The callback for when a PUBLISH message is received from the server.
+    # # The callback for when a PUBLISH message is received from the server.
     def on_message_(self, client, userdata, msg):
         print(msg.topic+" "+str(msg.payload))
 
@@ -75,12 +75,12 @@ class EnvironSensor(ProcessImpl):
                 json_string = json.dumps(json_object)
 
                 client = mqtt.Client("env/"+SH_ID+"/"+LAMP_ID)
-                # client.username_pw_set("dgo2o", "dgo2o!@")
+                client.username_pw_set("dgo2o", "dgo2o!@")
                 client.connect("118.67.128.157", 1883)
                 client.publish("env/"+SH_ID+"/"+LAMP_ID, json_string)  # topic, message
-                print("published")
                 client.on_connect = self.on_connect_
                 client.on_message = self.on_message_
+                print("published")
                 client.loop(2)
 
                 try:

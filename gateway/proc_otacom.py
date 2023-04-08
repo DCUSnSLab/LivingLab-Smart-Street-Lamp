@@ -39,7 +39,7 @@ class otaComm(ProcessImpl):
 
     def doProc(self):
         # await websockets.serve(self.accept(), "localhost", 5000)
-        start_server = websockets.serve(self.accept, "203.250.34.119", 5000)
+        start_server = websockets.serve(self.accept, "localhost", 5000)
         # 비동기로 서버를 대기한다.
         asyncio.get_event_loop().run_until_complete(start_server)
         asyncio.get_event_loop().run_forever()

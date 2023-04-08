@@ -41,11 +41,10 @@ class SunAPI(ProcessImpl):
                 
                 timenow = x.strftime("%H%M")
                 if timenow >= sunset or timenow <= sunrise:
-                    # print("on")
+                    print("***api led on***")
                     GPIO.output(led, GPIO.HIGH)
                 else:
-                    # print("off")
                     GPIO.output(led, GPIO.LOW)
-                time.sleep(5)
+                time.sleep(10)
         except KeyboardInterrupt:
             GPIO.cleanup()

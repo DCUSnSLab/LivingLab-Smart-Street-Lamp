@@ -19,13 +19,13 @@ class EmergencyButton(ProcessImpl):
                 # print('d', inputIO)
 
                 if inputIO == False:
-                    print('Emergency State')
+                    print('bell - Emergency State')
                     GPIO.output(20, True)
-                    time.sleep(1)
+                    time.sleep(7)
                 
                 else:
-                    # print('Normal State')
-                    time.sleep(0.5)
+                    # print('bell - Normal State')
+                    time.sleep(1)
                 GPIO.output(20, False)
         except KeyboardInterrupt:
             GPIO.cleanup()
