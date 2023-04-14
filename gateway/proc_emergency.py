@@ -26,6 +26,7 @@ class EmergencyButton(ProcessImpl):
                 if inputIO == False:
                     print('bell - Emergency State')
                     GPIO.output(20, True)
+                    x = dt.datetime.now()
                     json_object = {
                         "sh_id": SH_ID,
                         "lamp_id": LAMP_ID,
